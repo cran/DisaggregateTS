@@ -1,0 +1,16 @@
+822c5dd8ae45463b9a61e86ff78d9c82 *DESCRIPTION
+49a05e95b4f337a47a282713a87d423f *NAMESPACE
+54a358b8165d5029c2af3b493a4932da *R/SparseTD.R
+50bc014a76a7d20d69f6a43becdc752a *R/TempDisaggDGP.R
+b7c9bc6d7cbd1f076d70569d22f61bd7 *R/TempDisaggToolbox.R
+06575b4db7535a321b00898143ebc3f6 *R/hdBIC.R
+2d8de9491ba9e16427911b7f0d67d43f *R/kindex.R
+fc68f545b7902b0c1b0b9cff960a31ad *R/refit.R
+7381dc8077531070629fc1c553becca4 *build/partial.rdb
+0d0ecdfff63f17a3a460b96b631f3ed5 *inst/REFERENCES.bib
+72e572ef44aded13fe2d5310ee180f3e *man/SparseTD.Rd
+bc5c7838f5b383d7a61c3a3598cba745 *man/TempDisaggDGP.Rd
+632ced0bc33586b470f0ac7a6d075250 *man/TempDisaggToolbox.Rd
+b1f49d131af54ad0714c4df67b13a961 *man/hdBIC.Rd
+c4b7556610baf34e69ab15ab5b82ddce *man/k.index.Rd
+3efd5cacc686332231e53245577c73cb *man/refit.Rd
