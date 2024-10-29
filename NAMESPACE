@@ -2,6 +2,7 @@
 
 export(TempDisaggDGP)
 export(disaggregate)
+export(simulDiagnosis)
 import(Matrix)
 import(lars)
 import(withr)

@@ -7,14 +7,18 @@
 refit(X, Y, beta)
 }
 \arguments{
-\item{X}{Aggregated indicator series matrix that has been GLS rotated.}
+\item{X}{Aggregated indicator series matrix that has been GLS rotated (an \eqn{n_l \times p} matrix).}
 
-\item{Y}{Low-frequency response vector that has been GLS rotated.}
+\item{Y}{Low-frequency response vector that has been GLS rotated (an \eqn{n_l \times 1} vector).}
 
-\item{beta}{Estimate of beta from LARS algorithm for a certain lambda.}
+\item{beta}{Estimated beta coefficients from the LARS algorithm (a \eqn{p \times 1} vector).}
+}
+\value{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ A debiased estimate of the beta coefficients (a \eqn{p \times 1} vector).
+}\if{html}{\out{</div>}}
 }
 \description{
 This function reduces the bias in LASSO estimates by re-fitting the
-support back into GLS.
+active set of coefficients back into GLS (Generalized Least Squares).
 }
 \keyword{internal}

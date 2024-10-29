@@ -2,25 +2,24 @@
 % Please edit documentation in R/sptd_BIC.R
 \name{sptd_BIC}
 \alias{sptd_BIC}
-\title{Function to calculate the BIC score from sparse temporal disaggregation.}
+\title{BIC Score for Sparse Temporal Disaggregation}
 \usage{
 sptd_BIC(Y, X, vcov)
 }
 \arguments{
-\item{Y}{The low-frequency response series (n_l x 1 matrix).}
+\item{Y}{The low-frequency response series (\eqn{n_l \times 1} matrix).}
 
-\item{X}{The aggregated high-frequency indicator series (n_l x p matrix).}
+\item{X}{The aggregated high-frequency indicator series (\eqn{n_l \times p} matrix).}
 
-\item{vcov}{Aggregated variance-covariance matrix of AR(1) residuals.}
+\item{vcov}{Aggregated variance-covariance matrix of AR(\eqn{1}) residuals (\eqn{n_l \times n_l} matrix).}
+}
+\value{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    The minimum BIC score from the refitted models.
+}\if{html}{\out{</div>}}
 }
 \description{
-Used in disaggregation.R to find estimates of the optimal rho parameter.
+This function calculates the BIC score for sparse temporal disaggregation, as described in
+\insertCite{10.1111/rssa.12952;textual}{DisaggregateTS}. It uses the LARS algorithm to find the
+optimal beta coefficients and refits the models to compute BIC scores.
 }
-\references{
-\insertAllCited{}
-}
-\keyword{chow}
-\keyword{disaggregation}
-\keyword{lin}
-\keyword{litterman}
-\keyword{temporal}
+\keyword{internal}

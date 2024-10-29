@@ -2,37 +2,36 @@
 % Please edit documentation in R/sptd.R
 \name{sptd}
 \alias{sptd}
-\title{Function to do sparse temporal disaggregation from \insertCite{mosley2021sparse;textual}{DisaggregateTS}.}
+\title{Sparse Temporal Disaggregation}
 \usage{
-sptd(Y, X, rho, aggMat, aggRatio, adaptive = FALSE)
+sptd(Y, X, rho, aggMat = "sum", aggRatio = 4, adaptive = FALSE)
 }
 \arguments{
-\item{Y}{The low-frequency response series (n_l x 1 matrix).}
+\item{Y}{The low-frequency response series (\eqn{n_l \times 1} matrix).}
 
-\item{X}{The high-frequency indicator series (n x p matrix).}
+\item{X}{The high-frequency indicator series (\eqn{n \times p} matrix).}
 
-\item{rho}{The AR(1) residual parameter (strictly between -1 and 1).}
+\item{rho}{The AR(\eqn{1}) residual parameter (must be strictly between \eqn{-1} and \eqn{1}).}
 
-\item{aggMat}{Aggregation matrix according to 'first', 'sum', 'average', 'last' (default is 'sum').}
+\item{aggMat}{Aggregation matrix method ('first', 'sum', 'average', 'last'). Default is 'sum'.}
 
-\item{aggRatio}{Aggregation ratio e.g. 4 for annual-to-quarterly, 3 for quarterly-to-monthly (default is 4).}
+\item{aggRatio}{Aggregation ratio (e.g., 4 for annual-to-quarterly, 3 for quarterly-to-monthly). Default is 4.}
 
-\item{adaptive}{TRUE to use adaptive lasso penalty. FALSE for lasso penalty. Default is FALSE.}
+\item{adaptive}{Logical. If \code{TRUE}, use adaptive LASSO penalty. If \code{FALSE}, use standard LASSO penalty. Default is \code{FALSE}.}
 }
 \value{
-y	Estimated high-frequency response series (n x 1 matrix).
-
-betaHat	Estimated coefficient vector (p x 1 matrix).
-
-u_l	Estimated aggregate residual series (n_l x 1 matrix).
+A list containing:
+\itemize{
+\item \code{y}: Estimated high-frequency response series (\eqn{n \times 1} matrix).
+\item \code{betaHat}: Estimated coefficient vector (\eqn{p \times 1} matrix).
+\item \code{u_l}: Estimated aggregate residual series (\eqn{n_l \times 1} matrix).
+}
 }
 \description{
-Used in disaggregation.R to find estimates given the optimal rho parameter.
+This function performs sparse temporal disaggregation as described in \insertCite{10.1111/rssa.12952;textual}{DisaggregateTS}.
+It estimates the high-frequency response series using LARS (Least Angle Regression) and applies either a LASSO or adaptive LASSO penalty.
 }
 \references{
 \insertAllCited{}
 }
-\keyword{disaggregation}
-\keyword{lasso}
-\keyword{sparse}
-\keyword{temporal}
+\keyword{internal}

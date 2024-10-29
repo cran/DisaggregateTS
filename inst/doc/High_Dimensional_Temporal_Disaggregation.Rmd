@@ -1,0 +1,111 @@
+---
+title: "Temporal Disaggregation of IBM's GHG Emissions"
+#author: "Your Name"
+#date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Temporal Disaggregation of IBM's GHG Emissions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+# Introduction
+
+In this vignette, we demonstrate how to use the **DisaggregateTS** package to perform temporal disaggregation of IBM's greenhouse gas (GHG) emissions data. The goal is to estimate quarterly GHG emissions based on annual data, leveraging high-frequency economic indicators.
+
+## Background
+
+By focusing on emissions per unit of economic output, carbon intensity accounts for the fact that larger organizations or economies may naturally produce more emissions simply due to scale. This allows for a fair comparison of sustainability performance across different entities, regardless of size.
+
+Accurate and timely carbon accounting and the development of robust measurement frameworks are essential for effective emission reduction strategies and the pursuit of sustainable development goals. While carbon accounting frameworks offer valuable insights into emissions quantification, they are not without limitations. One of those limitations is the frequency with which this information is released, generally at an annual frequency, while most companies’ economic indicators are made public on a quarterly basis. This is a perfect example in which temporal disaggregation can be used to bridge the gap between data availability and prompt economic and financial analyses.
+
+In this application, the variable of interest is the GHG emissions for IBM between Q3 2005 and Q3 2021, at annual frequency, resulting in 17 data points (i.e., \(\mathbf{Y} \in \mathbb{R}^{17}\)). For the high-frequency data, we used the balance sheet, income statement, and cash flow statement quarterly data between Q3 2005 and Q3 2021, resulting in 68 data points for the 112 variables (after filtering). We remove variables that have a pairwise correlation higher than 0.99, resulting in a filtered dataset with 112 variables (\(\mathbf{X} \in \mathbb{R}^{68 \times 112}\)).
+
+In this example, we employ the adaptive LASSO method (`method = "adaptive-spTD"`) to select the best variables that can be used to recover the high-frequency observations, and we apply the `aggMat = "first"` aggregation method.
+
+# Data Preparation
+
+We start by loading the required packages and data.
+
+
+```{r setup, message=FALSE, warning=FALSE}
+library(DisaggregateTS)
+```
+
+```{r}
+# Load the combined data from the package
+data(combined_data)
+
+# Extract Data_Y and Data_X from the combined data
+Data_Y <- combined_data$Data_Y
+Data_X <- combined_data$Data_X
+
+# Select IBM GHG data and dates for Q3 2005 - Q3 2021
+Y <- Data_Y$IBM[7:23]
+Dates <- as.Date(Data_Y$Dates[7:23])
+
+# Filter high-frequency data (Q3 2005 - Q3 2021)
+X <- Data_X[24:91, ]
+
+# Convert all columns to numeric, remove columns with NA values
+X <- as.data.frame(lapply(X, as.numeric))
+Y <- as.numeric(Y)
+X <- X[, colSums(is.na(X)) == 0]
+
+# Remove highly correlated variables (pairwise correlation >= 0.99)
+corr_matrix <- cor(X, use = "complete.obs")
+corr_matrix[upper.tri(corr_matrix)] <- 0
+diag(corr_matrix) <- 0
+
+X_filtered <- X[, !apply(corr_matrix, 2, function(x) any(abs(x) >= 0.99))]
+```
+
+# Temporal Disaggregation
+
+```{r}
+result <- disaggregate(
+  Y = as.matrix(Y),
+  X = as.matrix(X_filtered),
+  aggMat = "first",
+  aggRatio = 4,
+  method = "adaptive-spTD"
+)
+
+# High-frequency estimates and coefficients
+Y_HF <- result$y_Est
+beta_Est <- result$beta_Est
+rho_Est <- result$rho_Est
+
+# Display estimated rho
+print(paste("Estimated rho:", rho_Est))
+```
+
+# Results
+
+```{r plot-results, fig.width=8, fig.height=5, echo=FALSE}
+# Ensure Dates_Q is in Date format
+Dates_Q <- as.Date(Data_X$Dates[24:91])
+
+# Plot the disaggregated and interpolated results
+plot(Dates_Q, Y_HF, type = "l", ylab = "GHG Emissions", xlab = "Time", lwd = 2, col = "black")
+
+# Add points on top of the line
+points(Dates_Q, Y_HF, col = "black", pch = 16)
+
+points(Dates, Y, col = "red", pch = 16)
+
+# Add legend
+legend("topright", legend = c("Observed Annual", "Disaggregated"), 
+       col = c("red", "black"), lty = c(NA, 1), pch = c(16, NA))
+```

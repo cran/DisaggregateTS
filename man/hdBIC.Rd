@@ -2,22 +2,26 @@
 % Please edit documentation in R/hdBIC.R
 \name{hdBIC}
 \alias{hdBIC}
-\title{BIC score}
+\title{High-dimensional BIC score}
 \usage{
 hdBIC(X, Y, covariance, beta)
 }
 \arguments{
-\item{X}{Aggregated indicator series matrix that has been GLS rotated.}
+\item{X}{Aggregated indicator series matrix that has been GLS rotated (an \eqn{n_l \times p} matrix).}
 
-\item{Y}{Low-frequency response vector that has been GLS rotated.}
+\item{Y}{Low-frequency response vector that has been GLS rotated (an \eqn{n_l \times 1} vector).}
 
-\item{covariance}{Aggregated AR covariance matrix.}
+\item{covariance}{Aggregated AR covariance matrix (an \eqn{n_l \times n_l} matrix).}
 
-\item{beta}{Estimate of beta from LARS algorithm for a certain lambda.}
+\item{beta}{Estimate of the regression coefficients (a \eqn{p \times 1} vector).}
+}
+\value{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{      The BIC score for model comparison.
+}\if{html}{\out{</div>}}
 }
 \description{
-This function calculates the BIC score that has been shown to work better than ordinary BIC in
-high-dimensional scenarios. It uses the variance estimator given in \insertCite{yu2019estimating;textual}{DisaggregateTS}.
+This function calculates a BIC score that performs better than the ordinary BIC in high-dimensional scenarios.
+It uses the variance estimator given in \insertCite{yu2019estimating;textual}{DisaggregateTS}.
 }
 \references{
 \insertAllCited{}

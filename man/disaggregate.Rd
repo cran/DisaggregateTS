@@ -6,7 +6,7 @@
 \usage{
 disaggregate(
   Y,
-  X = matrix(data = rep(1, times = nrow(Y)), nrow = nrow(Y)),
+  X = matrix(data = rep(1, times = (nrow(Y) * aggRatio)), nrow = (nrow(Y) * aggRatio)),
   aggMat = "sum",
   aggRatio = 4,
   method = "Chow-Lin",
@@ -14,9 +14,9 @@ disaggregate(
 )
 }
 \arguments{
-\item{Y}{The low-frequency response series (n_l x 1 matrix).}
+\item{Y}{The low-frequency response series (\eqn{n_l \times 1} matrix).}
 
-\item{X}{The high-frequency indicator series (n x p matrix).}
+\item{X}{The high-frequency indicator series (\eqn{n \times p} matrix).}
 
 \item{aggMat}{Aggregation matrix according to 'first', 'sum', 'average', 'last' (default is 'sum').}
 
@@ -24,32 +24,32 @@ disaggregate(
 
 \item{method}{Disaggregation method using 'Denton', 'Denton-Cholette', 'Chow-Lin', 'Fernandez', 'Litterman', 'spTD' or 'adaptive-spTD' (default is 'Chow-Lin').}
 
-\item{Denton}{Type of differencing for Denton method: 'absolute', 'first', 'second' and 'proportional' (default is 'first').}
+\item{Denton}{Type of differencing for Denton method: 'simple-diff', 'additive-first-diff', 'additive-second-diff', 'proportional-first-diff' and 'proportional-second-diff' (default is 'additive-first-diff'). For instance, 'simple-diff' differencing refers to the differences between the original and revised values, whereas 'additive-first-diff' differencing refers to the differences between the first differenced original and revised values.}
 }
 \value{
-y_Est	Estimated high-frequency response series (n x 1 matrix).
+\code{y_Est}:	  Estimated high-frequency response series (output is an \eqn{n \times 1} matrix).
 
-beta_Est	Estimated coefficient vector (p x 1 matrix).
+\code{beta_Est}:	Estimated coefficient vector (output is a \eqn{p \times 1} matrix).
 
-rho_Est	Estimated residual AR(1) autocorrelation parameter.
+\code{rho_Est}:	Estimated residual AR(1) autocorrelation parameter.
 
-ul_Est	Estimated aggregate residual series (n_l x 1 matrix).
+\code{ul_Est}:	  Estimated aggregate residual series (output is an \eqn{n_l \times 1} matrix).
 }
 \description{
 This function contains the traditional standard-dimensional temporal disaggregation methods proposed by \insertCite{denton1971adjustment;textual}{DisaggregateTS}, \insertCite{dagum2006benchmarking;textual}{DisaggregateTS},
 \insertCite{chow1971best;textual}{DisaggregateTS}, \insertCite{fernandez1981methodological;textual}{DisaggregateTS} and \insertCite{litterman1983random;textual}{DisaggregateTS},
-and the high-dimensional methods of \insertCite{mosley2021sparse;textual}{DisaggregateTS}.
+and the high-dimensional methods of \insertCite{10.1111/rssa.12952;textual}{DisaggregateTS}.
 }
 \details{
-Takes in a n_l x 1 low-frequency series to be disaggregated Y and a n x p high-frequency matrix of p indicator series X. If n > n_l x aggRatio where aggRatio
-is the aggregation ration (e.g. aggRatio = 4 if annual-to-quarterly disagg or aggRatio = 3 if quarterly-to-monthly disagg) then extrapolation is done
-to extrapolate up to n.
+Takes in a \eqn{n_l \times 1} low-frequency series to be disaggregated \eqn{Y} and a \eqn{n \times p} high-frequency matrix of p indicator series \eqn{X}. If \eqn{n > n_l \times aggRatio} where \eqn{aggRatio}
+is the aggregation ratio (e.g. \eqn{aggRatio = 4} if annual-to-quarterly disagg, or \eqn{aggRatio = 3} if quarterly-to-monthly disagg) then extrapolation is done
+to extrapolate up to \eqn{n}.
 }
 \examples{
-data = TempDisaggDGP(n_l=25,n=100,p=10,rho=0.5)
-X = data$X_Gen
-Y = data$Y_Gen
-fit_chowlin = disaggregate(Y=Y,X=X,method='Chow-Lin')
+data <- TempDisaggDGP(n_l=25,n=100,p=10,rho=0.5)
+X <- data$X_Gen
+Y <- data$Y_Gen
+fit_chowlin <- disaggregate(Y=Y,X=X,method='Chow-Lin')
 y_hat = fit_chowlin$y_Est
 }
 \references{

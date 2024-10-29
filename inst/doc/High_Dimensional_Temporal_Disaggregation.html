@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Temporal Disaggregation of IBM’s GHG Emissions</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Temporal Disaggregation of IBM’s GHG
+Emissions</h1>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>In this vignette, we demonstrate how to use the
+<strong>DisaggregateTS</strong> package to perform temporal
+disaggregation of IBM’s greenhouse gas (GHG) emissions data. The goal is
+to estimate quarterly GHG emissions based on annual data, leveraging
+high-frequency economic indicators.</p>
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>By focusing on emissions per unit of economic output, carbon
+intensity accounts for the fact that larger organizations or economies
+may naturally produce more emissions simply due to scale. This allows
+for a fair comparison of sustainability performance across different
+entities, regardless of size.</p>
+<p>Accurate and timely carbon accounting and the development of robust
+measurement frameworks are essential for effective emission reduction
+strategies and the pursuit of sustainable development goals. While
+carbon accounting frameworks offer valuable insights into emissions
+quantification, they are not without limitations. One of those
+limitations is the frequency with which this information is released,
+generally at an annual frequency, while most companies’ economic
+indicators are made public on a quarterly basis. This is a perfect
+example in which temporal disaggregation can be used to bridge the gap
+between data availability and prompt economic and financial
+analyses.</p>
+<p>In this application, the variable of interest is the GHG emissions
+for IBM between Q3 2005 and Q3 2021, at annual frequency, resulting in
+17 data points (i.e., <span class="math inline">\(\mathbf{Y} \in
+\mathbb{R}^{17}\)</span>). For the high-frequency data, we used the
+balance sheet, income statement, and cash flow statement quarterly data
+between Q3 2005 and Q3 2021, resulting in 68 data points for the 112
+variables (after filtering). We remove variables that have a pairwise
+correlation higher than 0.99, resulting in a filtered dataset with 112
+variables (<span class="math inline">\(\mathbf{X} \in \mathbb{R}^{68
+\times 112}\)</span>).</p>
+<p>In this example, we employ the adaptive LASSO method
+(<code>method = &quot;adaptive-spTD&quot;</code>) to select the best variables
+that can be used to recover the high-frequency observations, and we
+apply the <code>aggMat = &quot;first&quot;</code> aggregation method.</p>
+</div>
+</div>
+<div id="data-preparation" class="section level1">
+<h1>Data Preparation</h1>
+<p>We start by loading the required packages and data.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(DisaggregateTS)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Load the combined data from the package</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">data</span>(combined_data)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Extract Data_Y and Data_X from the combined data</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>Data_Y <span class="ot">&lt;-</span> combined_data<span class="sc">$</span>Data_Y</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>Data_X <span class="ot">&lt;-</span> combined_data<span class="sc">$</span>Data_X</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># Select IBM GHG data and dates for Q3 2005 - Q3 2021</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>Y <span class="ot">&lt;-</span> Data_Y<span class="sc">$</span>IBM[<span class="dv">7</span><span class="sc">:</span><span class="dv">23</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>Dates <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(Data_Y<span class="sc">$</span>Dates[<span class="dv">7</span><span class="sc">:</span><span class="dv">23</span>])</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co"># Filter high-frequency data (Q3 2005 - Q3 2021)</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>X <span class="ot">&lt;-</span> Data_X[<span class="dv">24</span><span class="sc">:</span><span class="dv">91</span>, ]</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co"># Convert all columns to numeric, remove columns with NA values</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">lapply</span>(X, as.numeric))</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; Warning in lapply(X, as.numeric): NAs introduced by coercion</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(Y)</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, <span class="fu">colSums</span>(<span class="fu">is.na</span>(X)) <span class="sc">==</span> <span class="dv">0</span>]</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co"># Remove highly correlated variables (pairwise correlation &gt;= 0.99)</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>corr_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(X, <span class="at">use =</span> <span class="st">&quot;complete.obs&quot;</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>corr_matrix[<span class="fu">upper.tri</span>(corr_matrix)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="fu">diag</span>(corr_matrix) <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a>X_filtered <span class="ot">&lt;-</span> X[, <span class="sc">!</span><span class="fu">apply</span>(corr_matrix, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="fu">any</span>(<span class="fu">abs</span>(x) <span class="sc">&gt;=</span> <span class="fl">0.99</span>))]</span></code></pre></div>
+</div>
+<div id="temporal-disaggregation" class="section level1">
+<h1>Temporal Disaggregation</h1>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">disaggregate</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">Y =</span> <span class="fu">as.matrix</span>(Y),</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">X =</span> <span class="fu">as.matrix</span>(X_filtered),</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">aggMat =</span> <span class="st">&quot;first&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">aggRatio =</span> <span class="dv">4</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;adaptive-spTD&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co"># High-frequency estimates and coefficients</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>Y_HF <span class="ot">&lt;-</span> result<span class="sc">$</span>y_Est</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>beta_Est <span class="ot">&lt;-</span> result<span class="sc">$</span>beta_Est</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>rho_Est <span class="ot">&lt;-</span> result<span class="sc">$</span>rho_Est</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co"># Display estimated rho</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;Estimated rho:&quot;</span>, rho_Est))</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Estimated rho: 0.837766867599513&quot;</span></span></code></pre></div>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

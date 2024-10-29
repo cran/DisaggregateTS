@@ -1,26 +1,36 @@
 Package: DisaggregateTS
+Type: Package
 Title: High-Dimensional Temporal Disaggregation
-Version: 2.0.0
-Authors@R: 
-     c(person(given = "Luke",
+Version: 3.0.0
+Authors@R: c(person(given = "Kaveh",
+           family = "Salehzadeh Nobari",
+           role = c("aut", "cre"),
+           email = "k.salehzadeh-nobari@imperial.ac.uk"),
+    	   person(given = "Luke",
            family = "Mosley",
-           role = c("aut","cre"),
-           email = "l.mosley@lancaster.ac.uk"),
-      person(given = "Kaveh",
-           family = "S. Nobari",
-           role = c("aut"),
-           email = "k.salehzadeh-nobari@imperial.ac.uk",
-           comment = c(ORCID = "0000-0002-4053-0781")))
-Description: First - Generates (potentially high-dimensional) high-frequency and low-frequency series for simulation studies in temporal disaggregation; Second - a toolkit utilizing temporal disaggregation and benchmarking techniques with a low-dimensional matrix of indicator series previously proposed in Dagum and Cholette (2006, ISBN:978-0-387-35439-2) ; and Third - novel techniques proposed by Mosley, Gibberd and Eckley (2021) <arXiv:2108.05783> for disaggregating low-frequency series in the presence of high-dimensional indicator matrices.
-Imports: Rdpack, zoo, lars, Matrix, withr
-RdMacros: Rdpack
-License: GPL (>= 3)
+           role = "aut",
+           email = "lukemos313@gmail.com"))
+Description: Provides tools for temporal disaggregation, including:
+    (1) High-dimensional and low-dimensional series generation for simulation studies;
+    (2) A toolkit for temporal disaggregation and benchmarking using low-dimensional indicator series 
+        as proposed by Dagum and Cholette (2006, ISBN:978-0-387-35439-2);
+    (3) Novel techniques by Mosley, Gibberd, and Eckley (2022, <doi:10.1111/rssa.12952>)
+        for disaggregating low-frequency series in the presence of high-dimensional indicator matrices.
+License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.2.0
+LazyData: true
+Imports: Rdpack, stats, Matrix, lars, zoo, withr
+Suggests: testthat (>= 3.0.0), knitr, rmarkdown, readxl, corrplot,
+        ggplot2
+RdMacros: Rdpack
+Config/testthat/edition: 3
+RoxygenNote: 7.2.3
+VignetteBuilder: knitr
+Depends: R (>= 3.5.0)
 NeedsCompilation: no
-Packaged: 2022-05-30 20:38:24 UTC; mosleyl
-Author: Luke Mosley [aut, cre],
-  Kaveh S. Nobari [aut] (<https://orcid.org/0000-0002-4053-0781>)
-Maintainer: Luke Mosley <l.mosley@lancaster.ac.uk>
+Packaged: 2024-10-28 20:13:16 UTC; ksalehza
+Author: Kaveh Salehzadeh Nobari [aut, cre],
+  Luke Mosley [aut]
+Maintainer: Kaveh Salehzadeh Nobari <k.salehzadeh-nobari@imperial.ac.uk>
 Repository: CRAN
-Date/Publication: 2022-05-30 21:10:02 UTC
+Date/Publication: 2024-10-29 10:30:02 UTC

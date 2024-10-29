@@ -2,12 +2,21 @@
 % Please edit documentation in R/kindex.R
 \name{k.index}
 \alias{k.index}
-\title{Index of support for LARS algorithm when in high-dimensions}
+\title{Index of support for LARS algorithm in high-dimensional settings}
 \usage{
-k.index(matrix, n_l)
+k.index(coef_matrix, n_l)
+}
+\arguments{
+\item{coef_matrix}{A matrix of beta coefficients, where rows represent different models.}
+
+\item{n_l}{The length of the low-frequency response series.}
+}
+\value{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       The index where the support of beta exceeds \eqn{n_l/2}, or the number of rows of the matrix if no such index is found.
+}\if{html}{\out{</div>}}
 }
 \description{
-This function prevents the support of beta becoming greater than n_l/2.
-This heuristic approach prevents erratic values of BIC when in high-dimensions.
+This function returns the index where the support of beta coefficients exceeds \eqn{n_l/2},
+preventing the BIC from becoming erratic in high-dimensional scenarios.
 }
 \keyword{internal}
