@@ -1,7 +1,7 @@
 Package: DisaggregateTS
 Type: Package
 Title: High-Dimensional Temporal Disaggregation
-Version: 3.0.0
+Version: 3.0.1
 Authors@R: c(person(given = "Kaveh",
            family = "Salehzadeh Nobari",
            role = c("aut", "cre"),
@@ -28,9 +28,9 @@ RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Depends: R (>= 3.5.0)
 NeedsCompilation: no
-Packaged: 2024-10-28 20:13:16 UTC; ksalehza
+Packaged: 2024-10-31 05:35:23 UTC; ksalehza
 Author: Kaveh Salehzadeh Nobari [aut, cre],
   Luke Mosley [aut]
 Maintainer: Kaveh Salehzadeh Nobari <k.salehzadeh-nobari@imperial.ac.uk>
 Repository: CRAN
-Date/Publication: 2024-10-29 10:30:02 UTC
+Date/Publication: 2024-10-31 12:40:06 UTC

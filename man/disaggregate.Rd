@@ -10,7 +10,7 @@ disaggregate(
   aggMat = "sum",
   aggRatio = 4,
   method = "Chow-Lin",
-  Denton = "first"
+  Denton = "additive-first-diff"
 )
 }
 \arguments{

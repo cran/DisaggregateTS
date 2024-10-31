@@ -35,7 +35,7 @@
 
 
 
-disaggregate <- function(Y, X = matrix(data = rep(1, times = (nrow(Y)*aggRatio)), nrow = (nrow(Y)*aggRatio)), aggMat = 'sum', aggRatio = 4, method = 'Chow-Lin', Denton = 'first'){
+disaggregate <- function(Y, X = matrix(data = rep(1, times = (nrow(Y)*aggRatio)), nrow = (nrow(Y)*aggRatio)), aggMat = 'sum', aggRatio = 4, method = 'Chow-Lin', Denton = 'additive-first-diff'){
 
 
   if(is.matrix(X) == FALSE || is.matrix(Y) == FALSE){
@@ -287,6 +287,4 @@ disaggregate <- function(Y, X = matrix(data = rep(1, times = (nrow(Y)*aggRatio))
   names(data_list) <- c("y_Est", "beta_Est", "rho_Est","ul_Est")
 
   return(data_list)
-
-
 }

@@ -9,61 +9,54 @@ library(DisaggregateTS)
 
 ## -----------------------------------------------------------------------------
 # Load the combined data from the package
-data(combined_data)
+data(Data)
 
 # Extract Data_Y and Data_X from the combined data
-Data_Y <- combined_data$Data_Y
-Data_X <- combined_data$Data_X
+Data_Y <- Data$Data_Y
+Data_X <- Data$Data_X
 
 # Select IBM GHG data and dates for Q3 2005 - Q3 2021
-Y <- Data_Y$IBM[7:23]
-Dates <- as.Date(Data_Y$Dates[7:23])
+Dates <- Data_Y$Dates[c(7:23)]
+Y <- Data_Y$IBM[c(7:23)]
+Y <- as.matrix(as.numeric(Y))
 
-# Filter high-frequency data (Q3 2005 - Q3 2021)
-X <- Data_X[24:91, ]
+# HF data available from 12-2004 (observation 21) up to 09-2021 (observation 88)
+Dates_Q <- Data_X$Dates[c(21:88)]
+X <- Data_X[c(21:88),]
+X <- sapply(X, as.numeric)
 
-# Convert all columns to numeric, remove columns with NA values
-X <- as.data.frame(lapply(X, as.numeric))
-Y <- as.numeric(Y)
-X <- X[, colSums(is.na(X)) == 0]
+# Remove columns containing NAs
+X <- X[ , colSums(is.na(X))==0] 
+
 
 # Remove highly correlated variables (pairwise correlation >= 0.99)
-corr_matrix <- cor(X, use = "complete.obs")
-corr_matrix[upper.tri(corr_matrix)] <- 0
-diag(corr_matrix) <- 0
+tmp <- cor(X)
+tmp[upper.tri(tmp)] <- 0
+diag(tmp) <- 0
 
-X_filtered <- X[, !apply(corr_matrix, 2, function(x) any(abs(x) >= 0.99))]
+X2 <- X[, !apply(tmp, 2, function(x) any(abs(x) >= 0.99, na.rm = TRUE))]
 
 ## -----------------------------------------------------------------------------
-result <- disaggregate(
-  Y = as.matrix(Y),
-  X = as.matrix(X_filtered),
-  aggMat = "first",
+C_sparse <- disaggregate(
+  as.matrix(Y),
+  as.matrix(X2),
+  aggMat   = "sum",
   aggRatio = 4,
-  method = "adaptive-spTD"
-)
+  method   = "adaptive-spTD")
 
-# High-frequency estimates and coefficients
-Y_HF <- result$y_Est
-beta_Est <- result$beta_Est
-rho_Est <- result$rho_Est
+# Temporally disaggregated time series
+Y_HF <- C_sparse$y_Est
 
-# Display estimated rho
-print(paste("Estimated rho:", rho_Est))
+## ----plot-results, fig.width=8, fig.height=5, echo=TRUE-----------------------
+par(mar = c(5, 6, 4, 5) + 0.1)  # Adjust margins for better spacing
 
-## ----plot-results, fig.width=8, fig.height=5, echo=FALSE----------------------
-# Ensure Dates_Q is in Date format
-Dates_Q <- as.Date(Data_X$Dates[24:91])
+# Plot the temporal disaggregated data
+plot(Dates_Q, Y_HF, type = "b", pch = 19, ylab = "GHG emissions", xlab = "Time",
+     lwd = 2, cex.lab = 1.4, cex.axis = 1.2, main = "Temporal Disaggregation of GHG Emissions")
 
-# Plot the disaggregated and interpolated results
-plot(Dates_Q, Y_HF, type = "l", ylab = "GHG Emissions", xlab = "Time", lwd = 2, col = "black")
-
-# Add points on top of the line
-points(Dates_Q, Y_HF, col = "black", pch = 16)
-
-points(Dates, Y, col = "red", pch = 16)
-
-# Add legend
-legend("topright", legend = c("Observed Annual", "Disaggregated"), 
-       col = c("red", "black"), lty = c(NA, 1), pch = c(16, NA))
+# Add a legend with adjusted font size and position
+legend("bottomleft", inset = 0.05, 
+       legend = "Temporal disaggregated observations",
+       col = "black", lty = 1, lwd = 2, pch = 19, 
+       cex = 1.2, pt.cex = 1.2)
 
